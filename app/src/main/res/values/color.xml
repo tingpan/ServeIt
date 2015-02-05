@@ -10,4 +10,5 @@
     <color name="portBackground">#90D400</color>
     <color name="terminateColor">#ED4141</color>
     <color name="terminatePress">#E92D2D</color>
+    <color name="qrbackground">#73A509</color>
 </resources>

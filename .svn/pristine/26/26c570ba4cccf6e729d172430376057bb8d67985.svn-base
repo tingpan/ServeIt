@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GrpProject</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="logoImg">Logo</string>
+    <string name="launchStart">Start</string>
+    <string name="LaunchSetting">Settings</string>
+    <string name="bottomSlogen">Lovingly made by Heroes for Hire</string>
+    <string name="title_activity_choose_game">ChooseGame</string>
+    <string name="title_activity_ready_to_port">Ready_to_port</string>
+    <string name="Comfirm">Comfirm</string>
+    <string name="title_activity_portgame">Portgame</string>
+
+</resources>

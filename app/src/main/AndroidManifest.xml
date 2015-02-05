@@ -27,7 +27,12 @@
         </activity>
         <activity
             android:name=".ReadyToPort"
-            android:label="@string/title_activity_ready_to_port" >
+            android:label="@string/title_activity_ready_to_port"
+            android:parentActivityName=".Launch">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Launch" >
+            </meta-data>
         </activity>
         <activity
             android:name=".PortGame"

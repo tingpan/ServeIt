@@ -12,5 +12,6 @@
     <string name="title_activity_ready_to_port">Ready_to_port</string>
     <string name="Comfirm">Comfirm</string>
     <string name="title_activity_portgame">Portgame</string>
+    <string name="title_activity_dialog">DialogActivity</string>
 
 </resources>

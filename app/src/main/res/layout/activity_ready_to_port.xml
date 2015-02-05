@@ -37,6 +37,7 @@
             android:id = "@+id/portGame"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:textColor="@color/white"
             android:text = "Something.js"
             android:shadowColor="#FFFFFF"
             android:shadowDx="0"

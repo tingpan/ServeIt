@@ -25,6 +25,7 @@
     />
 
     <ImageView
+        android:id="@+id/star"
         android:layout_marginTop="136dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -46,6 +47,7 @@
             android:text = "00:00:00"
             android:gravity="center"
             android:textSize="40dp"
+            android:textColor="@color/white"
          />
 
         <TextView
@@ -74,6 +76,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/terminatebutton"
             android:text="Terminate"
+            android:onClick="terminatePort"
             />
 
 

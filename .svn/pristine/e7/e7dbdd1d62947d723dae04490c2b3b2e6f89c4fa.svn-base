@@ -1,0 +1,13 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+	precomposeunicode = false
+[remote "serveit"]
+	url = https://1330597473@bitbucket.org/1330597473/serveit.git
+	fetch = +refs/heads/*:refs/remotes/serveit/*
+[branch "master"]
+	remote = serveit
+	merge = refs/heads/master

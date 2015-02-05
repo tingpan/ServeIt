@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+        android:propertyName="backgroundColor"
+        android:duration="2000"
+        android:valueFrom="@color/primaryDark"
+        android:valueTo="@color/portBackground"
+        android:valueType="intType">
+    </objectAnimator>
+
+</set><!-- From: file:/Users/TingPan/AndroidStudioProjects/GrpProject/app/src/main/res/animator/background_animation.xml -->

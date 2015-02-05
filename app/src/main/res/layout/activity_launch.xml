@@ -23,7 +23,7 @@
         android:layout_marginTop="30dp">
 
         <Button
-            android:textSize="48px"
+            android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/importantbutton"
@@ -31,7 +31,7 @@
             android:onClick="chooseGame"/>
 
         <Button
-            android:textSize="36px"
+            android:textSize="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"

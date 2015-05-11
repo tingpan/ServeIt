@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primaryDark"
+    tools:context="com.example.tingpan.grpproject.SplashActivity"
+    style="Widget.ProgressBar.Horizontal">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.3"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/logo2"
+        android:layout_weight="1"
+        android:contentDescription="@string/logoImg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+    <TextView
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/version"
+        android:layout_weight="1.5"/>
+
+    <TextView
+        android:gravity="center_horizontal|bottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/eventText"
+        android:text="@string/loading"
+        android:layout_weight="1"/>
+
+     <ProgressBar
+         android:paddingTop="6dp"
+         android:paddingBottom="10dp"
+         android:progressDrawable="@drawable/custom_progress"
+         android:id="@+id/progress"
+         android:layout_width="match_parent"
+         android:layout_height="20dip"
+         android:max="100"
+         android:progress="100"
+         android:paddingLeft="40dp"
+         android:paddingRight="40dp"
+         style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="48sp"
+            android:layout_weight="1.6"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+<!-- From: file:/Users/TingPan/AndroidStudioProjects/SVN/app/src/main/res/layout/activity_splash.xml -->

@@ -1,0 +1,200 @@
+package com.example.tingpan.grpproject;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Binder;
+import android.os.IBinder;
+import android.util.Log;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+
+/**
+ * Created by TingPan on 2/11/15.
+ */
+public class NodeService extends Service {
+    private static final String NODE_NAME = "node";
+    private static final String TAG = "node-service";
+    private static final String SERVER_NAME = "server.js";
+    public static final String PROGRESS_ACTION = "com.node.progress";
+    public static final String EVENT_ACTION = "com.node.event";
+    private MyBinder myBinder = new MyBinder();
+
+    private enum NodeState {NEW, EXTRACTING, FAILED, READY, STARTING, RUNNING, STOPPING}
+
+    private static NodeState nodeState = NodeState.NEW;
+    private Process nodeProcess;
+
+    private File fileDir;
+    private File nodeApp;
+    private File serverScript;
+    private ArrayList<File> fileToExtract;
+
+    private Intent broadcastIntent = new Intent();
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return myBinder;
+    }
+
+    private class MyBinder extends Binder {
+        public void startNode() {
+            Log.d(TAG, "Node Starting...");
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        fileDir = getFilesDir();
+        nodeApp = new File(fileDir, NODE_NAME);
+        serverScript = new File(fileDir, SERVER_NAME);
+
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        nodeState = NodeState.NEW;
+        fileToExtract = new ArrayList<>();
+        if (!nodeApp.exists()) {
+            Log.e(TAG, NODE_NAME + " not exist");
+            nodeState = NodeState.EXTRACTING;
+            fileToExtract.add(nodeApp);
+        }
+        if (!serverScript.exists()) {
+            Log.e(TAG, SERVER_NAME + " not exist");
+            nodeState = NodeState.EXTRACTING;
+            fileToExtract.add(serverScript);
+        }
+        PreLoading task = new PreLoading();
+        task.execute();
+        checkNode();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        sendMyBroadcast(EVENT_ACTION, "", 0);
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+
+    private void checkNode() {
+        sendMyBroadcast(PROGRESS_ACTION, "Checking Files...", 0);
+        if (!nodeApp.exists() || !serverScript.exists()) {
+            nodeState = NodeState.FAILED;
+            Log.e(TAG, "File does not exist");
+            sendMyBroadcast(PROGRESS_ACTION, "File is not complete", 100);
+            return;
+        } else {
+            if (!nodeApp.canExecute()) {
+                if (!nodeApp.setExecutable(true, false)) {
+                    nodeState = NodeState.FAILED;
+                    Log.e(TAG, "Fail to set executable");
+                    sendMyBroadcast(PROGRESS_ACTION, "File Can not be executed", 100);
+                    return;
+                } else {
+                    Log.d(TAG, "Set executable to " + nodeApp);
+                }
+            }
+        }
+        sendMyBroadcast(PROGRESS_ACTION, "Checking Versions", 50);
+        nodeState = NodeState.READY;
+        ProcessBuilder versionCheck = new ProcessBuilder(nodeApp.getAbsolutePath(), "--version");
+        versionCheck.directory(fileDir);
+        versionCheck.redirectErrorStream(true); //put the error info to standard output.
+        try {
+            nodeProcess = versionCheck.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(nodeProcess.getInputStream(), "UTF-8"));
+            String line = reader.readLine();
+            Log.d(TAG, "Node Process: " + line);
+            if (!line.equals("v0.11.12")) {
+                nodeState = NodeState.FAILED;
+                Log.e(TAG, "Node file is not correct");
+                sendMyBroadcast(PROGRESS_ACTION, "Wrong Version", 100);
+                return;
+            }
+        } catch (Exception e) {
+            nodeState = NodeState.FAILED;
+            Log.w(TAG, "Error reading from node: " + e);
+            sendMyBroadcast(PROGRESS_ACTION, "Wrong Version", 100);
+            return;
+        }
+        sendMyBroadcast(PROGRESS_ACTION, "Checking Completed", 100);
+    }
+
+
+//    private void startNode() {
+//        if (nodeState != NodeState.READY) {
+//            Log.e(TAG, "Node is not ready yet!");
+//        }
+//    }
+
+
+    private class PreLoading extends AsyncTask<String, Integer, Long> {
+        @Override
+        //copy the file to the internal memory (the app folder).
+        protected Long doInBackground(String... params) {
+            for (File file : fileToExtract) {
+                sendMyBroadcast(PROGRESS_ACTION, "Extracting: " + file.getName(), 0);
+                extractFile(file);
+            }
+            return null;
+        }
+
+        private void extractFile(File file) {
+            Log.d(TAG, "Extracting " + file + "...");
+            try {
+                InputStream in = NodeService.this.getAssets().open(file.getName());
+                int total = in.available();
+                OutputStream out = new FileOutputStream(file);
+                byte buffer[] = new byte[100000];
+                int len = 0;
+                while (true) {
+                    int count = in.read(buffer);
+                    if (count < 0)
+                        break;
+                    out.write(buffer, 0, count);
+                    len += count;
+                    int progress = (int) ((len * 1.0 / total) * 100);
+                    sendMyBroadcast(PROGRESS_ACTION, "Extracting: " + file.getName(), progress);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                in.close();
+                out.close();
+                Log.d(TAG, "Extracted " + len + " bytes to " + file);
+            } catch (IOException e) {
+                sendMyBroadcast(PROGRESS_ACTION, "Extracting: " + file.getName(), 100);
+                Log.e(TAG, "Error to copy " + file + ":" + e);
+            }
+        }
+    }
+
+    private void sendMyBroadcast(String action, String event, int progress) {
+        if (!action.equals(EVENT_ACTION)) {
+            broadcastIntent.setAction(action);
+            broadcastIntent.putExtra("event", event);
+            broadcastIntent.putExtra("progress", progress);
+        } else {
+            broadcastIntent.setAction(action);
+        }
+        sendBroadcast(broadcastIntent);
+    }
+
+}

@@ -1,0 +1,97 @@
+package com.example.tingpan.grpproject;
+
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+
+public class ChooseGame extends ActionBarActivity {
+
+
+    private List<Map<String,Object>> gameItems = new ArrayList<>();
+    private GameFileStore.MyBinder myBinder;
+    private boolean bindStatus = false;
+    private ListView gameList;
+    private GameListAdapter gameListAdapter;
+    private static final String TAG = "chooseGameActivity";
+
+    protected ServiceConnection myConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder = (GameFileStore.MyBinder) service;
+            gameItems = myBinder.readFile();
+            Log.d("Service", "get the game list, size is " + String.valueOf(gameItems.size()));
+            bindStatus = true;
+            setListView();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            myBinder = null;
+            bindStatus = false;
+        }
+    };
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_choose_game);
+        gameList = (ListView) findViewById(R.id.gameList);
+        Intent bindIntent = new Intent(this, GameFileStore.class);
+        bindService(bindIntent, myConnection, BIND_AUTO_CREATE);
+        gameList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ListView gameList = (ListView) parent;
+                Map<String,Object> game = (Map<String,Object>) gameList.getAdapter().getItem(position);
+                String gameTitle = game.get("title").toString();
+                Intent intent = new Intent(getApplicationContext(), ReadyToPort.class);
+                intent.putExtra("title",gameTitle);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_choose_game, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void setListView(){
+        gameListAdapter = new GameListAdapter(getApplicationContext(),gameItems);
+        gameList.setAdapter(gameListAdapter);
+    }
+
+}

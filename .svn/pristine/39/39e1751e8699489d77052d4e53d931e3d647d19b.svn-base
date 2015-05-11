@@ -1,0 +1,79 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primaryDark"
+    tools:context="com.example.tingpan.grpproject.ReadyToPort">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/logoImg"
+        android:layout_weight="1.5"/>
+
+
+    <ImageView
+        android:layout_weight="1.5"
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/logoImg"
+        android:src="@drawable/ready"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text = "@string/ready_to_port"
+            android:gravity="center"
+            android:textSize="25sp"
+        />
+
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_weight="1"
+            android:id = "@+id/portGame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:text = "@string/jsExample"
+            android:gravity="center"
+            android:shadowColor="@color/white"
+            android:shadowDy="2"
+            android:shadowRadius="4"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:textSize="20sp"
+        />
+
+
+        <Button
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/importantbutton"
+            android:text="@string/Comfirm"
+            android:onClick="startPort"
+        />
+
+
+        <TextView
+            android:layout_weight="1.1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal|bottom"
+            android:paddingBottom="8dp"
+            android:text="@string/bottomSlogen" />
+
+    </LinearLayout>
+</LinearLayout>
+<!-- From: file:/Users/TingPan/AndroidStudioProjects/SVN/app/src/main/res/layout/activity_ready_to_port.xml -->
